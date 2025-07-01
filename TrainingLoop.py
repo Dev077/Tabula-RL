@@ -3,24 +3,28 @@ from QLearningAgent import QLearningAgent
 import time
 import os
 
-def print_grid(agent_pos, goal_pos, size=5):
-    for r in range(size):
-        row = ''
-        for c in range(size):
-            if (r, c) == agent_pos:
-                row += ' A '
-            elif (r, c) == goal_pos:
-                row += ' G '
-            else:
-                row += ' . '
-        print(row)
-    time.sleep(0.3)  # Adjust for faster/slower animation
-
-
 env = GridWorldEnv()
 agent = QLearningAgent(action=['up', 'down', 'left', 'right'])
 episodes = 1000
 steps = 0
+
+def print_grid(agent_pos, goal_pos, obstacles=None, size=7):
+    # os.system('cls' if os.name == 'nt' else 'clear')
+    for r in range(size):
+        row = ''
+        for c in range(size):
+            pos = (r, c)
+            if pos == agent_pos:
+                row += ' A '
+            elif pos == goal_pos:
+                row += ' G '
+            elif obstacles and pos in obstacles:
+                row += ' X '
+            else:
+                row += ' . '
+        print(row)
+    time.sleep(0.3)
+
 
 for episode in range(episodes):
     state = env.reset()
@@ -48,6 +52,6 @@ while not done:
     action = agent.choose_action(state, exploit_only=True)
     state, reward, done = env.step(action)
     steps += 1
-    print_grid(state, env.goal)
+    print_grid(state, env.goal, obstacles=env.obstacles, size=env.size)
     print(f"Step {steps}: Action = {action}, State = {state}, Reward = {reward}")
 
