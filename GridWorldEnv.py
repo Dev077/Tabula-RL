@@ -1,4 +1,5 @@
 import random
+import pickle
 
 class GridWorldEnv:
     def __init__(self):
@@ -41,4 +42,13 @@ class GridWorldEnv:
             pos = (random.randint(0, self.size - 1), random.randint(0, self.size - 1))
             if pos != self.goal:
                 self.obstacles.add(pos)
+
+    def save_map(self, filename='grid_map.pkl'):
+        with open(filename, 'wb') as f:
+            pickle.dump(self.obstacles, f)
+
+    def load_map(self, filename='grid_map.pkl'):
+        with open(filename, 'rb') as f:
+            self.obstacles = pickle.load(f)
+
 
